@@ -1,28 +1,32 @@
+# ETAPA 1: Construcción (Builder)
+# Instala todo y compila el código de TypeScript a JavaScript.
 FROM node:21-alpine3.18 as builder
 
 RUN corepack enable && corepack prepare pnpm@latest --activate
-ENV PNPM_HOME=/usr/local/bin
-
 WORKDIR /app
 
 COPY package*.json pnpm-lock.yaml ./
-
-RUN apk add --no-cache \
-    git 
-
-# RUN pnpm install  pm2 -g
+RUN pnpm install
 
 COPY . .
-RUN pnpm i
+# ✅ SE AÑADE EL PASO DE COMPILACIÓN
+RUN pnpm run build
 
-FROM builder as deploy
 
-ARG RAILWAY_STATIC_URL
-ARG PUBLIC_URL
-ARG PORT
-COPY --from=builder /app/src ./src
+# ETAPA 2: Producción (Deploy)
+# Crea la imagen final, más ligera y optimizada.
+FROM node:21-alpine3.18 as deploy
+
+RUN corepack enable && corepack prepare pnpm@latest --activate
+WORKDIR /app
+
+# Copia solo lo necesario desde la etapa de construcción
 COPY --from=builder /app/package.json /app/pnpm-lock.yaml ./
+# ✅ SE COPIA LA CARPETA 'dist' (CÓDIGO COMPILADO)
+COPY --from=builder /app/dist ./dist
 
+# Instala solo las dependencias de PRODUCCIÓN
 RUN pnpm install --frozen-lockfile --production
-# CMD ["pm2-runtime", "start", "./dist/app.js", "--cron", "0 */12 * * *"]
+
+# Comando para iniciar la aplicación
 CMD ["npm", "start"]

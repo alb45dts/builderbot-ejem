@@ -1,28 +1,28 @@
-# ETAPA 1: Construcción (Builder)
-FROM node:21-alpine3.18 as builder
+FROM node:20-slim
 
-RUN corepack enable && corepack prepare pnpm@latest --activate
-WORKDIR /app
+# Instala dependencias del sistema
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    git \
+    ca-certificates \
+    && rm -rf /var/lib/apt/lists/*
 
-RUN apk add --no-cache git
+# Establece el directorio de trabajo
+WORKDIR /usr/src/app
 
-COPY package*.json pnpm-lock.yaml ./
-RUN pnpm install
+# Copia los archivos de la carpeta app
+COPY ./app/package*.json ./
 
-COPY . .
-RUN pnpm run build
+# Instala dependencias con npm (más estable)
+RUN npm ci || npm install
 
-RUN pnpm prune --prod
+# Copia el resto del código de la carpeta app
+COPY ./app .
 
+# Compila el proyecto
+RUN npm run build
 
-# ETAPA 2: Producción (Deploy)
-FROM node:21-alpine3.18 as deploy
+# Expone el puerto
+EXPOSE 3008
 
-RUN corepack enable && corepack prepare pnpm@latest --activate
-WORKDIR /app
-
-COPY --from=builder /app/package.json /app/pnpm-lock.yaml ./
-COPY --from=builder /app/dist ./dist
-COPY --from=builder /app/node_modules ./node_modules
-
+# Comando para iniciar
 CMD ["npm", "start"]

@@ -13,8 +13,7 @@
   "keywords": [],
   "dependencies": {
     "@builderbot/bot": "latest",
-    "@builderbot/provider-baileys": "latest",
-    "@builderbot/database": "latest"
+    "@builderbot/provider-baileys": "latest"
   },
   "devDependencies": {
     "@types/node": "^20.11.30",

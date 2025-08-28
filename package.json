@@ -14,7 +14,7 @@
   "dependencies": {
     "@builderbot/bot": "latest",
     "@builderbot/provider-baileys": "latest",
-    "@builderbot/database-redis": "latest"
+    "@builderbot/database": "latest"
   },
   "devDependencies": {
     "@types/node": "^20.11.30",

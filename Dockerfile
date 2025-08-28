@@ -4,7 +4,6 @@ FROM node:21-alpine3.18 as builder
 RUN corepack enable && corepack prepare pnpm@latest --activate
 WORKDIR /app
 
-# Instalar 'git'
 RUN apk add --no-cache git
 
 COPY package*.json pnpm-lock.yaml ./
@@ -12,6 +11,8 @@ RUN pnpm install
 
 COPY . .
 RUN pnpm run build
+
+RUN pnpm prune --prod
 
 
 # ETAPA 2: Producción (Deploy)
@@ -22,8 +23,6 @@ WORKDIR /app
 
 COPY --from=builder /app/package.json /app/pnpm-lock.yaml ./
 COPY --from=builder /app/dist ./dist
-
-# ✅ SE CORRIGE EL COMANDO DE INSTALACIÓN FINAL
-RUN pnpm install --prod
+COPY --from=builder /app/node_modules ./node_modules
 
 CMD ["npm", "start"]

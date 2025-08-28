@@ -1,7 +1,8 @@
 import { join } from 'path'
-import { createBot, createProvider, createFlow, addKeyword, utils } from '@builderbot/bot'
-// ✅ CAMBIO: Se importa desde '@builderbot/database'
-import { RedisDB as Database } from '@builderbot/database'
+// ✅ CAMBIO 1: Se importa RedisDB directamente desde '@builderbot/bot'
+import { createBot, createProvider, createFlow, addKeyword, utils, RedisDB } from '@builderbot/bot'
+// ✅ CAMBIO 2: Se usa el alias 'Database' para RedisDB
+const Database = RedisDB 
 import { BaileysProvider as Provider } from '@builderbot/provider-baileys'
 
 const PORT = process.env.PORT ?? 3008
@@ -30,7 +31,7 @@ const fullSamplesFlow = addKeyword<Provider, Database>(['sample', utils.setEvent
         media: join(process.cwd(), 'assets', 'sample.png'),
     })
     .addAnswer(`Send video from URL`, {
-        media: 'https://media. giphy.com/media/v1.Y2lkPTc5MGI3NjExYTJ0ZGdjd2syeXAwMjQ4aWdkcW04OWlqcXI3Ynh1ODkwZ25zZWZ1dCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/LCohAb657pSdHv0Q5h/giphy.mp4',
+        media: 'https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExYTJ0ZGdjd2syeXAwMjQ4aWdkcW04OWlqcXI3Ynh1ODkwZ25zZWZ1dCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/LCohAb657pSdHv0Q5h/giphy.mp4',
     })
     .addAnswer(`Send audio from URL`, {
         media: 'https://cdn.freesound.org/previews/728/728142_11861866-lq.mp3',

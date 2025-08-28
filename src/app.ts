@@ -1,6 +1,6 @@
 import { join } from 'path'
 import { createBot, createProvider, createFlow, addKeyword, utils } from '@builderbot/bot'
-// ✅ CAMBIO 1: Se importa RedisDB y se le da el alias 'Database'
+// ✅ CAMBIO 1: Se importa RedisDB
 import { RedisDB as Database } from '@builderbot/database-redis'
 import { BaileysProvider as Provider } from '@builderbot/provider-baileys'
 

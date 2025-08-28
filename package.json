@@ -12,8 +12,9 @@
   },
   "keywords": [],
   "dependencies": {
-    "@builderbot/bot": "1.0.28-alpha.0",
-    "@builderbot/provider-baileys": "1.0.28-alpha.0"
+    "@builderbot/bot": "latest",
+    "@builderbot/provider-baileys": "latest",
+    "@builderbot/database-redis": "latest"
   },
   "devDependencies": {
     "@types/node": "^20.11.30",

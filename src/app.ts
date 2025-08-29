@@ -51,10 +51,10 @@ async function main() {
   const adapterFlow = createFlow([welcomeFlow, fullSamplesFlow])
   const adapterProvider = createProvider(BaileysProvider)
 
-  // DB por defecto (memoria)
+  // DB en memoria (rápido para arrancar)
   let adapterDB = new MemoryDB()
 
-  // Si prefieres Mongo, instala el paquete y descomenta:
+  // Si quieres Mongo (persistencia), descomenta y configura:
   //   pnpm add @builderbot/database-mongo
   // const { MongoDB } = await import('@builderbot/database-mongo')
   // adapterDB = new MongoDB({ uri: process.env.MONGO_URI! })
@@ -65,11 +65,15 @@ async function main() {
     database: adapterDB,
   })
 
-  // Endpoint HTTP para enviar mensajes
+  // Endpoint HTTP con guard para bot undefined
   adapterProvider.server.post(
     '/v1/messages',
     handleCtx(async (bot, req, res) => {
-      const { number, message, urlMedia } = req.body
+      if (!bot) {
+        res.statusCode = 503
+        return res.end('bot not ready')
+      }
+      const { number, message, urlMedia } = (req as any).body ?? {}
       await bot.sendMessage(number, message, { media: urlMedia ?? null })
       res.end('sended')
     })

@@ -1,29 +1,20 @@
 {
-  "name": "base-bailey-json",
-  "version": "1.0.0",
-  "description": "",
-  "main": "dist/app.js",
-  "type": "module",
-  "scripts": {
-    "start": "node ./dist/app.js",
-    "lint": "eslint . --no-ignore",
-    "dev": "node --no-warnings --env-file=.env --import=tsx --watch-path=./src ./src/app.ts",
-    "build": "npx rollup -c"
-  },
-  "keywords": [],
-  "dependencies": {
-    "@builderbot/bot": "latest",
-    "@builderbot/provider-baileys": "latest"
-  },
-  "devDependencies": {
-    "@types/node": "^20.11.30",
-    "@typescript-eslint/eslint-plugin": "^7.2.0",
-    "eslint": "^8.52.0",
-    "eslint-plugin-builderbot": "dev",
-    "rollup": "^4.10.0",
-    "rollup-plugin-typescript2": "^0.36.0",
-    "tsx": "^4.7.1"
-  },
-  "author": "",
-  "license": "ISC"
+"name": "base-baileys-memory",
+"version": "1.0.0",
+"main": "dist/app.js",
+"scripts": {
+"build": "rimraf dist && tsc",
+"start": "node dist/app.js",
+"dev": "tsx src/app.ts"
+},
+"dependencies": {
+"@builderbot/bot": "1.3.2-y.0",
+"@builderbot/provider-baileys": "1.3.2-y.0"
+},
+"devDependencies": {
+"@types/node": "^20.12.3",
+"rimraf": "^5.0.5",
+"typescript": "^5.4.3",
+"tsx": "^4.7.1"
+}
 }

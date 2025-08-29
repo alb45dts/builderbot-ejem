@@ -1,28 +1,25 @@
 FROM node:20-slim
 
-# Instala dependencias del sistema
+# Herramientas necesarias y pnpm estable
 RUN apt-get update && apt-get install -y --no-install-recommends \
-    git \
-    ca-certificates \
+    git ca-certificates python3 make g++ \
+    && npm install -g pnpm@9.1.0 \
     && rm -rf /var/lib/apt/lists/*
 
-# Establece el directorio de trabajo
 WORKDIR /usr/src/app
 
-# Copia los archivos de la carpeta app
-COPY ./app/package*.json ./
+# Copia solo package.json para cachear dependencias
+COPY package.json ./
 
-# Instala dependencias con npm (más estable)
-RUN npm ci || npm install
+# Instala dependencias (si no hay lock, pnpm lo generará)
+RUN pnpm install
 
-# Copia el resto del código de la carpeta app
-COPY ./app .
+# Copia el resto del código
+COPY . .
 
-# Compila el proyecto
-RUN npm run build
+# Compila
+RUN pnpm run build
 
-# Expone el puerto
 EXPOSE 3008
 
-# Comando para iniciar
-CMD ["npm", "start"]
+CMD ["pnpm", "start"]
